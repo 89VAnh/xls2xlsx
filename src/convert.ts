@@ -1,7 +1,7 @@
-const { exec } = require("child_process");
-const path = require("path");
+import { exec } from "child_process";
+import path from "path";
 
-function runPowerShellCommand(command) {
+function runPowerShellCommand(command: string) {
   return new Promise((resolve, reject) => {
     exec(`powershell.exe -Command "${command}"`, (error, stdout, stderr) => {
       if (error) {
@@ -19,9 +19,13 @@ function runPowerShellCommand(command) {
   });
 }
 
-async function ConvertXlsToXlsx(inputPath) {
+export async function ConvertXlsToXlsx(inputPath: string) {
   const shellScript = path.join(__dirname, "/xls2xlsx.ps1");
-  outputPath = path.join(__dirname, "/xlsx/", path.basename(inputPath) + "x");
+  const outputPath = path.join(
+    __dirname,
+    "/xlsx/",
+    path.basename(inputPath) + "x"
+  );
   await runPowerShellCommand(
     `${shellScript} -InputPath ${inputPath} -OutputPath ${outputPath}`
   )
@@ -33,7 +37,3 @@ async function ConvertXlsToXlsx(inputPath) {
       console.error("Failed to execute PowerShell command:", error);
     });
 }
-
-module.exports = {
-  ConvertXlsToXlsx,
-};
